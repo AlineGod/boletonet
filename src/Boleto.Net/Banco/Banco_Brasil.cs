@@ -47,12 +47,13 @@ namespace BoletoNet
         public override void ValidaBoleto(Boleto boleto)
         {
             if (string.IsNullOrEmpty(boleto.Carteira))
-                throw new NotImplementedException("Carteira não informada. Utilize a carteira 11, 16, 17, 17-019, 17-027, 18, 18-019, 18-027, 18-035, 18-140, 17-159, 17-140, 17-067 ou 31.");
+                throw new NotImplementedException("Carteira não informada. Utilize a carteira 11, 16, 17, 17-043, 17-019, 17-027, 18, 18-019, 18-027, 18-035, 18-140, 17-159, 17-140, 17-067 ou 31.");
 
             //Verifica as carteiras implementadas
             if (!boleto.Carteira.Equals("11") &
                 !boleto.Carteira.Equals("16") &
                 !boleto.Carteira.Equals("17") &
+                !boleto.Carteira.Equals("17-043") &
                 !boleto.Carteira.Equals("17-019") &
                 !boleto.Carteira.Equals("17-027") &
 				!boleto.Carteira.Equals("17-035") &
@@ -67,7 +68,7 @@ namespace BoletoNet
                 !boleto.Carteira.Equals("18-140") &
                 !boleto.Carteira.Equals("31"))
 
-                throw new NotImplementedException("Carteira não informada. Utilize a carteira 11, 16, 17, 17-019, 17-027, 18, 18-019, 18-027, 18-035, 18-140, 17-159, 17-140, 17-067 ou 31.");
+                throw new NotImplementedException("Carteira não informada. Utilize a carteira 11, 16, 17, 17-043, 17-019, 17-027, 18, 18-019, 18-027, 18-035, 18-140, 17-159, 17-140, 17-067 ou 31.");
 
             //Verifica se o nosso número é válido
             if (Utils.ToString(boleto.NossoNumero) == string.Empty)
@@ -145,9 +146,9 @@ namespace BoletoNet
             }
             #endregion Carteira 17
 
-            #region Carteira 17-019, 17-067 e 17-167
-            //Carteira 17, com variação 019
-            if (boleto.Carteira.Equals("17-019") || boleto.Carteira.Equals("17-067") || boleto.Carteira.Equals("17-167"))
+            #region Carteira 17-043, 17-019, 17-067 e 17-167
+            //Carteira 17, com variações 043, 019, 067 e 167
+            if (boleto.Carteira.Equals("17-043") || boleto.Carteira.Equals("17-019") || boleto.Carteira.Equals("17-067") || boleto.Carteira.Equals("17-167"))
             {
                 /*
                  * Convênio de 7 posições
@@ -166,8 +167,7 @@ namespace BoletoNet
                  */
                 else if (boleto.Cedente.Convenio.ToString().Length == 6)
                 {
-                    //Nosso Número com 17 posições
-                    if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                    if ((boleto.Cedente.Convenio.ToString().Length + boleto.NossoNumero.Length) > 11)
                         throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                     boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -186,7 +186,7 @@ namespace BoletoNet
                 else
                     boleto.NossoNumero = Utils.FormatCode(boleto.NossoNumero, 11);
             }
-            #endregion Carteira 17-019, 17-067 e 17-167
+            #endregion Carteira 17-043, 17-019, 17-067 e 17-167
 
             #region Carteira 17-027
             //Carteira 17, com variação 027, 129 e 140
@@ -209,8 +209,7 @@ namespace BoletoNet
                  */
                 else if (boleto.Cedente.Convenio.ToString().Length == 6)
                 {
-                    //Nosso Número com 17 posições
-                    if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                    if ((boleto.Cedente.Convenio.ToString().Length + boleto.NossoNumero.Length) > 11)
                         throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                     boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -252,10 +251,10 @@ namespace BoletoNet
                  */
                 else if (boleto.Cedente.Convenio.ToString().Length == 6)
                 {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
-                            throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
+                    if ((boleto.Cedente.Convenio.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
-                        boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
+                    boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
                 }
                 /*
                   * Convênio de 4 posições
@@ -306,7 +305,7 @@ namespace BoletoNet
                     //Nosso Número com 17 posições
                     if (!boleto.TipoModalidade.Equals("21"))
                     {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        if ((boleto.Cedente.Convenio.ToString().Length + boleto.NossoNumero.Length) > 11)
                             throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                         boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -338,7 +337,7 @@ namespace BoletoNet
 
             //Para atender o cliente Fiemg foi adaptado no código na variação 18-027 as variações 18-035 e 18-140
             #region Carteira 18-027
-            //Carteira 18, com variação 019
+            //Carteira 18, com variação 027
             if (boleto.Carteira.Equals("18-027"))
             {
                 /*
@@ -362,7 +361,7 @@ namespace BoletoNet
                     //Nosso Número com 17 posições
                     if (!boleto.TipoModalidade.Equals("21"))
                     {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        if ((boleto.Cedente.Convenio.ToString().Length + boleto.NossoNumero.Length) > 11)
                             throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                         boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -392,7 +391,7 @@ namespace BoletoNet
             #endregion Carteira 18-027
 
             #region Carteira 18-035
-            //Carteira 18, com variação 019
+            //Carteira 18, com variação 035
             if (boleto.Carteira.Equals("18-035"))
             {
                 /*
@@ -416,7 +415,7 @@ namespace BoletoNet
                     //Nosso Número com 17 posições
                     if (!boleto.TipoModalidade.Equals("21"))
                     {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        if ((boleto.Cedente.Convenio.ToString().Length + boleto.NossoNumero.Length) > 11)
                             throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                         boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -446,7 +445,7 @@ namespace BoletoNet
             #endregion Carteira 18-035
 
             #region Carteira 18-140
-            //Carteira 18, com variação 019
+            //Carteira 18, com variação 140
             if (boleto.Carteira.Equals("18-140"))
             {
                 /*
@@ -470,7 +469,7 @@ namespace BoletoNet
                     //Nosso Número com 17 posições
                     if (!boleto.TipoModalidade.Equals("21"))
                     {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        if ((boleto.Cedente.Convenio.ToString().Length + boleto.NossoNumero.Length) > 11)
                             throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                         boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -679,8 +678,8 @@ namespace BoletoNet
             }
             #endregion Carteira 17
 
-            #region Carteira 17-019, 17-067 e 17-167
-            if (boleto.Carteira.Equals("17-019") || boleto.Carteira.Equals("17-067") || boleto.Carteira.Equals("17-167"))
+            #region Carteira 17-043, 17-019, 17-067 e 17-167
+            if (boleto.Carteira.Equals("17-043") || boleto.Carteira.Equals("17-019") || boleto.Carteira.Equals("17-067") || boleto.Carteira.Equals("17-167"))
             {
                 if (boleto.Cedente.Convenio.ToString().Length == 7)
                 {
@@ -738,7 +737,7 @@ namespace BoletoNet
                     throw new Exception("Código do convênio informado é inválido. O código do convenio deve ter 4, 6, ou 7 dígitos.");
                 }
             }
-            #endregion Carteira 17-019, 17-067 e 17-167
+            #endregion Carteira 17-043, 17-019, 17-067 e 17-167
 
             #region Carteira 17-027, 17-140 e 17-159
             if (boleto.Carteira.Equals("17-027") || boleto.Carteira.Equals("17-140") || boleto.Carteira.Equals("17-159"))
@@ -1255,6 +1254,7 @@ namespace BoletoNet
             {
                 switch (boleto.Carteira)
                 {
+                    case "17-043":
                     case "18-019":
                         boleto.NossoNumero = string.Format("{0}/{1}-{2}", LimparCarteira(boleto.Carteira), boleto.NossoNumero, Mod11BancoBrasil(boleto.NossoNumero));
                         return;
@@ -1263,6 +1263,10 @@ namespace BoletoNet
 
             switch (boleto.Carteira)
             {
+                case "17-043":
+                    if (boleto.Cedente.Convenio.ToString().Length != 6)
+                        boleto.NossoNumero = string.Format("{0}/{1}", LimparCarteira(boleto.Carteira), boleto.NossoNumero);
+                    return;
                 case "17-019":
                 case "17-027":
 				case "17-035":
@@ -1481,7 +1485,7 @@ namespace BoletoNet
                 // 7 – para carteira 17 modalidade Simples.
                 if (boleto.ModalidadeCobranca == 0)
                 {
-                    if (boleto.Carteira.Equals("17-019") || boleto.Carteira.Equals("17-027") || boleto.Carteira.Equals("17-035") || boleto.Carteira.Equals("17-140") || boleto.Carteira.Equals("17-159") || boleto.Carteira.Equals("17-067") || boleto.Carteira.Equals("17-167"))
+                    if (boleto.Carteira.Equals("17-043") || boleto.Carteira.Equals("17-019") || boleto.Carteira.Equals("17-027") || boleto.Carteira.Equals("17-035") || boleto.Carteira.Equals("17-140") || boleto.Carteira.Equals("17-159") || boleto.Carteira.Equals("17-067") || boleto.Carteira.Equals("17-167"))
                         _segmentoP += "7";
                     else
                         _segmentoP += "0";
